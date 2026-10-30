@@ -24,7 +24,7 @@
     .emblem:hover { border-color: #a970ff; box-shadow: 0 0 24px #a970ff24; }
     .emblem::after { content: '✦'; position: absolute; color: #e9bce5; right: -7px; top: 2px; font-size: 19px; }
     .avatar-frame { width: 100%; height: 100%; overflow: hidden; border-radius: 50%; position: relative; }
-    .emblem img { display: block; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 165%; height: 165%; max-width: none; object-fit: cover; }
+    .emblem img { display: block; position: absolute; left: -43px; top: -48px; width: 216px; height: auto; max-width: none; }
     .eyebrow { font-size: 10px; letter-spacing: 3.2px; color: #bba3d2; margin: 0 0 12px; }
     h1 { font-size: clamp(52px, 10vw, 66px); line-height: 1.05; font-weight: 400; letter-spacing: -3.5px; margin: 0 0 17px; }
     h1 span { color: #e7c2e8; }
@@ -78,7 +78,32 @@
     @keyframes orbit-turn { to { transform: rotate(360deg); } }
     @keyframes star-float { from { transform: translateY(0) scale(.85); opacity: .25; } to { transform: translateY(-14px) scale(1.1); opacity: .75; } }
     .s1 { top: 29%; left: 19%; } .s2 { top: 18%; right: 22%; font-size: 9px; } .s3 { top: 65%; right: 17%; font-size: 19px; } .s4 { bottom: 22%; left: 24%; font-size: 8px; }
-    @media (min-width: 1400px) { main { margin-top: 65px; margin-bottom: 80px; } }
+    @media (min-width: 601px) {
+      .page { display: flex; flex-direction: column; padding: 24px 48px 18px; }
+      main { width: min(100%, 560px); margin: clamp(16px, 3vh, 36px) auto 24px; }
+      .emblem { margin-bottom: 18px; }
+      h1 { font-size: 56px; letter-spacing: -2.8px; margin-bottom: 12px; }
+      .divider { margin: 20px auto; max-width: 480px; }
+      nav { width: min(100%, 480px); margin: 0 auto; gap: 9px; }
+      .link { min-height: 70px; padding-top: 12px; padding-bottom: 12px; }
+      .link.primary { min-height: 78px; }
+      .setup-link { margin-top: 14px; }
+      .note { margin-top: 14px; }
+      footer { margin-top: auto; padding-top: 14px; }
+    }
+    @media (min-width: 601px) and (max-height: 780px) {
+      .page { padding-top: 16px; padding-bottom: 14px; }
+      main { margin-top: 12px; margin-bottom: 16px; }
+      .emblem { margin-bottom: 12px; }
+      .eyebrow { margin-bottom: 8px; }
+      h1 { font-size: 50px; margin-bottom: 8px; }
+      .divider { margin-top: 13px; margin-bottom: 13px; }
+      nav { gap: 8px; }
+      .link { min-height: 58px; padding-top: 7px; padding-bottom: 7px; }
+      .link.primary { min-height: 64px; }
+      .setup-link { margin-top: 8px; }
+      .note { margin-top: 8px; }
+    }
     @media (max-width: 600px) { .page { padding: 25px 22px 22px; } main { margin-top: 42px; margin-bottom: 44px; } .link { padding: 16px 19px; } .s1 { left: 7%; top: 24%; } .s2 { right: 12%; top: 14%; } .s3, .s4 { display: none; } footer { font-size: 9px; letter-spacing: .4px; } }
     @media (prefers-reduced-motion: reduce) { .link, .link::after, .cursor-dots, .emblem { transition: none; } .link:hover { transform: none; } .page::after, .orbit, .orbit-outer, .star { animation: none; } }
   </style>
@@ -100,7 +125,7 @@
       </div>
     </div><span class="star s1" aria-hidden="true">✦</span><span class="star s2" aria-hidden="true">✧</span><span class="star s3" aria-hidden="true">✧</span><span class="star s4" aria-hidden="true">✦</span>
     <main>
-      <a class="emblem" href="https://twitch.tv/loonatya" target="_blank" rel="noopener noreferrer" aria-label="Лунатя на Twitch"><span class="avatar-frame"><img src="avatar.png" alt="Аватар Лунати" width="132" height="132"></span></a>
+      <a class="emblem" href="https://twitch.tv/loonatya" target="_blank" rel="noopener noreferrer" aria-label="Лунатя на Twitch"><span class="avatar-frame"><img src="avatar.png" alt="Аватар Лунати" width="857" height="893"></span></a>
       <p class="eyebrow">VTUBER · STREAMER · COSPLAYER</p>
       <h1>Привет, я <span>Лунатя</span></h1>
       <p class="intro">Немного игр, немного разговоров.</p>
