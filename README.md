@@ -17,20 +17,22 @@ IMAGE=loonatya:local docker compose up -d --wait
 
 - `.github/workflows/build.yml`: на PR проверяет сборку; на push в `main` или ручной
   запуск с `main` публикует образ в GHCR и вызывает деплой.
-- `.github/workflows/deploy.yml`: вызываемый workflow, копирует Compose на VDS,
+- `.github/workflows/deploy.yml`: вызываемый workflow, использует существующий Compose на VDS,
   выполняет `docker compose pull`, затем `docker compose up -d --wait`.
 - `scripts/deploy.sh`: SSH-деплой с проверкой host key, временным входом в GHCR
   и ожиданием healthcheck. Ошибка pull останавливает деплой до перезапуска контейнера.
 
 Образ: `ghcr.io/keelfy/loonatya`. Теги: `latest` и `sha-<полный commit SHA>`.
-Автодеплой использует digest конкретной успешной сборки, а не изменяемый `latest`.
+Для Compose с `image: ${IMAGE:-ghcr.io/keelfy/loonatya:latest}` автодеплой передаёт
+`IMAGE` с digest успешной сборки только в окружение SSH-сеанса.
+Если образ указан в серверном Compose напрямую, обновляется именно этот образ.
 Сборка рассчитана на **linux/amd64**; для ARM VDS измените `platforms` в build.yml.
 Запуски одной ветки сериализованы: начатый деплой не отменяется новым push.
 
 ## Настройка VDS
 
 Нужны Bash, Docker Engine и Compose с поддержкой `up --wait`. SSH-пользователь
-должен иметь доступ к Docker без интерактивного sudo и право записи в каталог сайта.
+должен иметь доступ к Docker без интерактивного sudo и право чтения каталога сайта.
 Установите публичную часть отдельного deploy-ключа в его `~/.ssh/authorized_keys`.
 
 Первичная подготовка, пример для SSH-пользователя `deploy`:
@@ -38,6 +40,9 @@ IMAGE=loonatya:local docker compose up -d --wait
 ```bash
 sudo install -d -o deploy -g deploy /opt/loonatya
 ```
+
+Разместите свой Compose и при необходимости `.env` в этом каталоге заранее.
+Деплой не создаёт каталог, не копирует и не изменяет файлы сайта на VDS.
 
 В GitHub создайте environment **production** в Settings → Environments.
 Добавьте variables и secrets в этот environment (или на уровне репозитория).
@@ -84,13 +89,15 @@ HTTP → HTTPS redirect настройте на HTTP entrypoint существу
 удалите label `traefik.http.routers.loonatya.tls.certresolver` из этого Compose;
 переменная `TRAEFIK_CERTRESOLVER` тогда не нужна.
 
-Workflow доставляет оба Compose-файла. `COMPOSE_FILE` из серверного `.env`
-выбирает вариант с Traefik для pull, up, logs и отката — флаг `-f` не требуется.
-После следующего деплоя можно повторить запуск вручную:
+Файлы в репозитории — примеры для первоначальной ручной настройки.
+Если используете `COMPOSE_FILE=compose.traefik.yml`, заранее разместите этот файл
+на VDS. Для стандартного `compose.yml` переменная `COMPOSE_FILE` не нужна.
+Деплой использует ваш Compose и автоматически читает серверный `.env`.
+Ручной запуск:
 
 ```bash
 cd /opt/loonatya
-docker compose --env-file .env --env-file image.env up -d --wait
+docker compose up -d --wait
 ```
 
 Настройки labels: [документация Traefik](https://doc.traefik.io/traefik/reference/routing-configuration/other-providers/docker/).
@@ -108,13 +115,17 @@ HTTP_BIND=0.0.0.0
 HTTP_PORT=80
 ```
 
-Workflow сохраняет `.env` и записывает digest успешного деплоя в `image.env`.
-Ручной повторный запуск уже загруженного образа:
+Workflow выполняет в `DEPLOY_PATH` только `docker compose pull` и
+`docker compose up -d --wait --wait-timeout 60`, предварительно авторизуясь в GHCR.
+Compose, `.env` и ранее созданный `image.env` остаются без изменений; `image.env`
+больше не используется. При ручном запуске образ выбирается из вашего Compose
+и `.env`, значение `IMAGE` из предыдущего SSH-сеанса не сохраняется.
+Ручной запуск:
 
 ```bash
 cd /opt/loonatya
-docker compose --env-file .env --env-file image.env up -d --wait
-docker compose --env-file .env --env-file image.env logs --tail=100
+docker compose up -d --wait
+docker compose logs --tail=100
 ```
 
 Ручной pull приватного package требует отдельного `docker login ghcr.io` с
@@ -123,15 +134,18 @@ docker compose --env-file .env --env-file image.env logs --tail=100
 
 ## Откат
 
-Укажите digest предыдущей успешной сборки в `image.env`, затем выполните:
+Для Compose с переменной `${IMAGE}` передайте предыдущий digest в окружение
+(замените `<digest>` на действительный SHA256):
 
 ```bash
-docker compose --env-file .env --env-file image.env pull
-docker compose --env-file .env --env-file image.env up -d --wait --wait-timeout 60
+cd /opt/loonatya
+export IMAGE='ghcr.io/keelfy/loonatya@sha256:<digest>'
+docker compose pull
+docker compose up -d --wait --wait-timeout 60
 ```
 
 Автоматического отката нет. При неуспешном healthcheck workflow завершится
-ошибкой; предыдущий `image.env` сохранится, но контейнер уже может быть заменён.
+ошибкой, но контейнер уже может быть заменён.
 
 ## Первое включение
 

@@ -11,7 +11,7 @@ set -euo pipefail
 SSH_PORT=${SSH_PORT:-22}
 DEPLOY_PATH=${DEPLOY_PATH:-/opt/loonatya}
 
-# Restrict values that also appear in the remote shell command and SCP path.
+# Restrict connection values and the path used in the remote shell command.
 [[ "$SSH_HOST" =~ ^[a-zA-Z0-9][a-zA-Z0-9.-]*$ ]]
 [[ "$SSH_USER" =~ ^[a-zA-Z_][a-zA-Z0-9_-]*$ ]]
 [[ "$SSH_PORT" =~ ^[0-9]{1,5}$ ]]
@@ -29,10 +29,6 @@ ssh_options=(-i "$ssh_dir/key" -o BatchMode=yes -o IdentitiesOnly=yes
   -o ConnectTimeout=15 -o ServerAliveInterval=15 -o ServerAliveCountMax=3)
 target="$SSH_USER@$SSH_HOST"
 
-ssh "${ssh_options[@]}" -p "$SSH_PORT" "$target" "mkdir -p '$DEPLOY_PATH'"
-scp "${ssh_options[@]}" -P "$SSH_PORT" compose.yml "$target:$DEPLOY_PATH/compose.next.yml"
-scp "${ssh_options[@]}" -P "$SSH_PORT" compose.traefik.yml "$target:$DEPLOY_PATH/compose.traefik.next.yml"
-
 # Send the short-lived registry token through encrypted stdin, not command arguments.
 {
   printf 'registry_token=%q\n' "$GHCR_TOKEN"
@@ -46,12 +42,7 @@ DOCKER_CONFIG=$(mktemp -d)
 trap 'rm -rf "$DOCKER_CONFIG"' EXIT
 printf '%s' "$registry_token" | docker login ghcr.io --username "$registry_user" --password-stdin
 unset registry_token
-mv compose.next.yml compose.yml
-mv compose.traefik.next.yml compose.traefik.yml
-touch .env image.env
-docker compose --env-file .env --env-file image.env pull
-docker compose --env-file .env --env-file image.env up -d --wait --wait-timeout 60
-printf 'IMAGE=%s\n' "$IMAGE" > image.env
-docker compose --env-file .env --env-file image.env ps
+docker compose pull
+docker compose up -d --wait --wait-timeout 60
 REMOTE
 } | ssh "${ssh_options[@]}" -p "$SSH_PORT" "$target" "bash -s -- '$DEPLOY_PATH'"
