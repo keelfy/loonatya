@@ -19,12 +19,11 @@
     .wordmark { font-size: 17px; font-weight: 700; letter-spacing: -.8px; }
     .wordmark svg { width: 17px; height: 17px; margin-left: 5px; vertical-align: -3px; color: var(--pink); }
     main { width: min(100%, 480px); margin: 48px auto 64px; text-align: center; }
-    .emblem { width: 132px; height: 132px; position: relative; margin: 0 auto 24px; display: grid; place-items: center; border: 1px solid #b49bcd40; border-radius: 50%; background: radial-gradient(circle at 35% 25%, #65507c4d, #27203433); box-shadow: 0 0 60px #ba82dd12; }
-    .emblem { text-decoration: none; transition: border-color .2s, box-shadow .2s; }
-    .emblem:hover { border-color: #a970ff; box-shadow: 0 0 24px #a970ff24; }
+    .emblem { width: 120px; position: relative; margin: 0 auto 24px; display: block; border-radius: 18px; box-shadow: 0 0 60px #ba82dd24; }
+    .emblem { text-decoration: none; transition: box-shadow .2s; }
+    .emblem:hover { box-shadow: 0 0 28px #a970ff66; }
     .emblem::after { content: '✦'; position: absolute; color: #e9bce5; right: -7px; top: 2px; font-size: 19px; }
-    .avatar-frame { width: 100%; height: 100%; overflow: hidden; border-radius: 50%; position: relative; }
-    .emblem img { display: block; position: absolute; left: -43px; top: -48px; width: 216px; height: auto; max-width: none; }
+    .emblem img { display: block; width: 100%; height: auto; border-radius: inherit; }
     .eyebrow { font-size: 10px; letter-spacing: 3.2px; color: #bba3d2; margin: 0 0 12px; }
     h1 { font-size: clamp(52px, 10vw, 66px); line-height: 1.05; font-weight: 400; letter-spacing: -3.5px; margin: 0 0 17px; }
     h1 span { color: #e7c2e8; }
@@ -125,7 +124,7 @@
       </div>
     </div><span class="star s1" aria-hidden="true">✦</span><span class="star s2" aria-hidden="true">✧</span><span class="star s3" aria-hidden="true">✧</span><span class="star s4" aria-hidden="true">✦</span>
     <main>
-      <a class="emblem" href="https://twitch.tv/loonatya" target="_blank" rel="noopener noreferrer" aria-label="Лунатя на Twitch"><span class="avatar-frame"><img src="avatar.png" alt="Аватар Лунати" width="857" height="893"></span></a>
+      <a class="emblem" href="https://twitch.tv/loonatya" target="_blank" rel="noopener noreferrer" aria-label="Лунатя на Twitch"><img src="avatar.png" alt="Аватар Лунати" width="606" height="703"></a>
       <p class="eyebrow">VTUBER · STREAMER · COSPLAYER</p>
       <h1>Привет, я <span>Лунатя</span></h1>
       <p class="intro">Немного игр, немного разговоров.</p>
