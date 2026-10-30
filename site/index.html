@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#100f1a">
+  <meta name="description" content="Лунатя — VTuber. Стримы, видео и уютное комьюнити. Все ссылки в одном месте.">
+  <title>loonatya · между стримами</title>
+  <style>
+    :root { color-scheme: dark; --ink: #f4efff; --soft: #aaa4bd; --pink: #e3b5e0; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #100f1a; color: var(--ink); font-family: 'Trebuchet MS', Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+    .page { min-height: 100svh; position: relative; overflow: hidden; isolation: isolate; padding: 36px 56px 28px; background: radial-gradient(ellipse at 50% 4%, #41306555, transparent 51%), radial-gradient(ellipse at 97% 72%, #38224540, transparent 41%); }
+    .page::before { content: ''; position: absolute; inset: 0; z-index: -1; opacity: .18; background-image: radial-gradient(#bdb1d5 .65px, transparent .65px); background-size: 7px 7px; mask-image: linear-gradient(110deg, #000, transparent 36%, transparent 70%, #000); }
+    .page::after { content: ''; position: absolute; inset: -80px; z-index: -1; pointer-events: none; background: radial-gradient(ellipse at 28% 25%, #9770d228, transparent 42%), radial-gradient(ellipse at 75% 65%, #d18cb71c, transparent 40%); animation: glow-drift 18s ease-in-out infinite alternate; }
+    .cursor-dots { position: absolute; inset: 0; pointer-events: none; z-index: -1; opacity: 0; mask-image: radial-gradient(circle 140px at var(--dot-x, -200px) var(--dot-y, -200px), #000, transparent); transition: opacity .3s; }
+    .cursor-dots::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(#d7c1eb .65px, transparent .65px); background-size: 7px 7px; mask-image: linear-gradient(110deg, #000, transparent 36%, transparent 70%, #000); }
+    header, footer { display: flex; align-items: center; justify-content: space-between; }
+    .wordmark { font-size: 17px; font-weight: 700; letter-spacing: -.8px; }
+    .wordmark svg { width: 17px; height: 17px; margin-left: 5px; vertical-align: -3px; color: var(--pink); }
+    main { width: min(100%, 480px); margin: 48px auto 64px; text-align: center; }
+    .emblem { width: 100px; height: 100px; position: relative; margin: 0 auto 24px; display: grid; place-items: center; border: 1px solid #b49bcd40; border-radius: 50%; background: radial-gradient(circle at 35% 25%, #65507c4d, #27203433); box-shadow: 0 0 60px #ba82dd12; }
+    .emblem { text-decoration: none; transition: border-color .2s, box-shadow .2s; }
+    .emblem:hover { border-color: #a970ff; box-shadow: 0 0 24px #a970ff24; }
+    .emblem::after { content: '✦'; position: absolute; color: #e9bce5; right: -7px; top: 2px; font-size: 19px; }
+    .emblem img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .eyebrow { font-size: 10px; letter-spacing: 3.2px; color: #bba3d2; margin: 0 0 12px; }
+    h1 { font-size: clamp(52px, 10vw, 66px); line-height: 1.05; font-weight: 400; letter-spacing: -3.5px; margin: 0 0 17px; }
+    h1 span { color: #e7c2e8; }
+    .intro { color: #bdb5cb; font-size: 14px; line-height: 1.8; margin: 0; }
+    .divider { display: flex; align-items: center; gap: 16px; color: #a18ab5; font-size: 12px; margin: 29px 0 26px; }
+    .divider::before, .divider::after { content: ''; height: 1px; flex: 1; background: linear-gradient(90deg, transparent, #55446380); }
+    .divider::after { transform: rotate(180deg); }
+    nav { display: grid; gap: 11px; text-align: left; }
+    .link { min-height: 78px; display: flex; gap: 17px; align-items: center; padding: 16px 22px; color: var(--ink); text-decoration: none; border: 1px solid #82719832; border-radius: 15px; background: #211b2d88; transition: transform .18s, border-color .18s, background .18s; }
+    .link:hover { transform: translateY(-2px); border-color: #c4a3d588; background: #34283f; }
+    .link:focus-visible, .emblem:focus-visible { outline: 2px solid #edc6ed; outline-offset: 4px; }
+    .link.primary { min-height: 90px; background: linear-gradient(105deg, #69518770, #4b365f70); border-color: #b18bcb66; }
+    .link { position: relative; }
+    .link::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; background: radial-gradient(180px circle at var(--pointer-x, 50%) var(--pointer-y, 50%), #efcaff20, transparent 75%); transition: opacity .2s; }
+    @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+      .cursor-dots.is-active { opacity: .55; }
+      .link.is-pointed { transform: perspective(700px) translateY(-2px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)); }
+      .link.is-pointed::after { opacity: 1; }
+    }
+    .icon { width: 26px; height: 26px; flex-shrink: 0; color: #c9b8dd; }
+    .twitch .icon { color: #a970ff; }
+    .youtube .icon { color: #ff4545; }
+    .discord .icon { color: #8891f2; }
+    .telegram .icon { color: #2aabee; }
+    .label { flex: 1; }
+    .name { display: block; font-size: 17px; letter-spacing: -.2px; margin-bottom: 6px; }
+    .description { display: block; font-size: 12px; color: #b9afc8; }
+    .arrow { width: 18px; height: 18px; color: #a892b9; }
+    .note { color: #a69bb4; font-size: 11px; letter-spacing: .3px; margin: 27px 0 0; }
+    .note span { color: #d9afd5; margin-right: 6px; }
+    footer { color: #8d829d; font-size: 10px; letter-spacing: 1px; padding-top: 20px; border-top: 1px solid #80709020; }
+    .orbit { width: 690px; height: 690px; border: 1px solid #c29bd20b; border-radius: 50%; position: absolute; top: 44px; left: calc(50% - 345px); z-index: -1; }
+    .orbit::before { content: ''; position: absolute; inset: -85px; border: 1px solid #c29bd208; border-radius: 50%; }
+    .orbit { pointer-events: none; animation: orbit-turn 90s linear infinite; }
+    .orbit::after { content: ''; position: absolute; top: 50%; left: -3px; width: 5px; height: 5px; border-radius: 50%; background: #d6b8ec99; box-shadow: 0 0 15px #c197e577; }
+    .orbit-object { position: absolute; left: var(--x); top: var(--y); width: 6px; height: 6px; border-radius: 50%; background: #c8a9dd; opacity: .55; transform: translate(-50%, -50%); }
+    .orbit-object.ring { width: 11px; height: 11px; border: 1px solid #cfb6e5; background: transparent; }
+    .orbit-object.diamond { width: 7px; height: 7px; border-radius: 1px; background: #d8b4cf; transform: translate(-50%, -50%) rotate(45deg); }
+    .orbit-object.spark { width: auto; height: auto; background: transparent; color: #e0c2e8; font-size: 16px; line-height: 1; }
+    .orbit-outer { position: absolute; inset: -85px; border-radius: 50%; animation: orbit-turn 140s linear infinite reverse; }
+    .star { position: absolute; color: #cbb2df; font-size: 15px; opacity: .6; pointer-events: none; }
+    .star { animation: star-float 7s ease-in-out infinite alternate; }
+    .s2 { animation-delay: -4s; animation-duration: 9s; }
+    .s3 { animation-delay: -2s; animation-duration: 8s; }
+    .s4 { animation-delay: -6s; animation-duration: 10s; }
+    @keyframes glow-drift { from { transform: translate(-25px, -20px); opacity: .45; } to { transform: translate(35px, 30px); opacity: 1; } }
+    @keyframes orbit-turn { to { transform: rotate(360deg); } }
+    @keyframes star-float { from { transform: translateY(0) scale(.85); opacity: .25; } to { transform: translateY(-14px) scale(1.1); opacity: .75; } }
+    .s1 { top: 29%; left: 19%; } .s2 { top: 18%; right: 22%; font-size: 9px; } .s3 { top: 65%; right: 17%; font-size: 19px; } .s4 { bottom: 22%; left: 24%; font-size: 8px; }
+    @media (min-width: 1400px) { main { margin-top: 65px; margin-bottom: 80px; } }
+    @media (max-width: 600px) { .page { padding: 25px 22px 22px; } main { margin-top: 42px; margin-bottom: 44px; } .link { padding: 16px 19px; } .s1 { left: 7%; top: 24%; } .s2 { right: 12%; top: 14%; } .s3, .s4 { display: none; } footer { font-size: 9px; letter-spacing: .4px; } }
+    @media (prefers-reduced-motion: reduce) { .link, .link::after, .cursor-dots, .emblem { transition: none; } .link:hover { transform: none; } .page::after, .orbit, .orbit-outer, .star { animation: none; } }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="cursor-dots" aria-hidden="true"></div>
+    <header><div class="wordmark">loonatya<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.9 13.2A9 9 0 0 1 10.8 3.1a9 9 0 1 0 10.1 10.1Z"/></svg></div></header>
+    <div class="orbit" aria-hidden="true">
+      <span class="orbit-object ring" style="--x:50%;--y:0%"></span>
+      <span class="orbit-object spark" style="--x:85.355%;--y:14.645%">✦</span>
+      <span class="orbit-object" style="--x:100%;--y:50%"></span>
+      <span class="orbit-object diamond" style="--x:50%;--y:100%"></span>
+      <div class="orbit-outer">
+        <span class="orbit-object" style="--x:14.645%;--y:14.645%"></span>
+        <span class="orbit-object diamond" style="--x:85.355%;--y:14.645%"></span>
+        <span class="orbit-object ring" style="--x:85.355%;--y:85.355%"></span>
+        <span class="orbit-object spark" style="--x:14.645%;--y:85.355%">✧</span>
+      </div>
+    </div><span class="star s1" aria-hidden="true">✦</span><span class="star s2" aria-hidden="true">✧</span><span class="star s3" aria-hidden="true">✧</span><span class="star s4" aria-hidden="true">✦</span>
+    <main>
+      <a class="emblem" href="https://twitch.tv/loonatya" target="_blank" rel="noopener noreferrer" aria-label="Лунатя на Twitch"><img src="avatar.png" alt="Аватар Лунати" width="100" height="100"></a>
+      <p class="eyebrow">VTUBER · STREAMER · COSPLAYER</p>
+      <h1>Привет, я <span>Лунатя</span></h1>
+      <p class="intro">Немного игр, немного разговоров.</p>
+      <div class="divider" aria-hidden="true">✧</div>
+      <nav aria-label="Каналы Лунати">
+        <a class="link primary twitch" href="https://twitch.tv/loonatya" target="_blank" rel="noopener noreferrer"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 3h16v12l-5 5h-5l-4 3v-3H3V7Z"/><path d="M10 7v7m6-7v7"/></svg><span class="label"><span class="name">Twitch</span><span class="description">Увидимся на стриме</span></span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></a>
+        <a class="link youtube" href="https://www.youtube.com/@loonatya" target="_blank" rel="noopener noreferrer"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="5"/><path d="m10 9 5 3-5 3Z"/></svg><span class="label"><span class="name">YouTube</span><span class="description">Ещё немного меня</span></span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></a>
+        <a class="link discord" href="https://discord.com/invite/sVWTjjbfjr" target="_blank" rel="noopener noreferrer"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m8 5-4 1-3 12 5 2 2-3m8-12 4 1 3 12-5 2-2-3M7 6c3-1 7-1 10 0M6 16c4 2 8 2 12 0"/><circle cx="8" cy="12" r="1.3"/><circle cx="16" cy="12" r="1.3"/></svg><span class="label"><span class="name">Discord</span><span class="description">Наше место для разговоров</span></span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></a>
+        <a class="link telegram" href="https://t.me/loonatovo" target="_blank" rel="noopener noreferrer"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M22 3 18 21l-6-5-4 4v-7l10-7L6 12l-4-2Z"/></svg><span class="label"><span class="name">Telegram</span><span class="description">На связи между стримами</span></span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></a>
+      </nav>
+      <p class="note"><span aria-hidden="true">♡</span> Место где тебе всегда рады</p>
+    </main>
+    <footer><span>keelfy @ 2026</span><span>до встречи по ту сторону экрана ✧</span></footer>
+  </div>
+  <script>
+    (() => {
+      const page = document.querySelector('.page');
+      const dots = document.querySelector('.cursor-dots');
+      const motion = matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
+      let frame = 0;
+      let activeCard = null;
+      let point = null;
+
+      function clearCard() {
+        if (!activeCard) return;
+        activeCard.classList.remove('is-pointed');
+        for (const name of ['--pointer-x', '--pointer-y', '--tilt-x', '--tilt-y']) {
+          activeCard.style.removeProperty(name);
+        }
+        activeCard = null;
+      }
+
+      function reset() {
+        cancelAnimationFrame(frame);
+        frame = 0;
+        point = null;
+        dots.classList.remove('is-active');
+        clearCard();
+      }
+
+      page.addEventListener('pointermove', (event) => {
+        if (!motion.matches || event.pointerType === 'touch') return;
+        point = { x: event.clientX, y: event.clientY, card: event.target.closest('.link') };
+        if (frame) return;
+        frame = requestAnimationFrame(() => {
+          frame = 0;
+          if (!point || !motion.matches) return;
+          const { x, y, card } = point;
+          const bounds = card?.getBoundingClientRect();
+          const pageBounds = page.getBoundingClientRect();
+          dots.style.setProperty('--dot-x', `${x - pageBounds.left}px`);
+          dots.style.setProperty('--dot-y', `${y - pageBounds.top}px`);
+          dots.classList.add('is-active');
+          if (activeCard !== card) clearCard();
+          if (!card) return;
+          activeCard = card;
+          const horizontal = Math.max(0, Math.min(1, (x - bounds.left) / bounds.width));
+          const vertical = Math.max(0, Math.min(1, (y - bounds.top) / bounds.height));
+          card.style.setProperty('--pointer-x', `${horizontal * 100}%`);
+          card.style.setProperty('--pointer-y', `${vertical * 100}%`);
+          card.style.setProperty('--tilt-x', `${(0.5 - vertical) * 4}deg`);
+          card.style.setProperty('--tilt-y', `${(horizontal - 0.5) * 4}deg`);
+          card.classList.add('is-pointed');
+        });
+      }, { passive: true });
+      page.addEventListener('pointerleave', reset);
+      page.addEventListener('pointercancel', reset);
+      window.addEventListener('blur', reset);
+      window.addEventListener('scroll', reset, { passive: true });
+      motion.addEventListener('change', reset);
+      document.addEventListener('visibilitychange', () => { if (document.hidden) reset(); });
+    })();
+  </script>
+</body>
+</html>
