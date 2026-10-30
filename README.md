@@ -60,6 +60,41 @@ Workflow не принимает неизвестный ключ автомат�
 деплоя. GHCR package должен разрешать этому репозиторию Actions access;
 новый package, созданный workflow, связывается с репозиторием автоматически.
 
+## Traefik с Docker labels
+
+`compose.traefik.yml` подключает сайт к существующей внешней сети Traefik.
+Порт на хост не публикуется: Traefik направляет запросы на порт `80` контейнера.
+
+Создайте или дополните `/opt/loonatya/.env` на VDS:
+
+```dotenv
+COMPOSE_FILE=compose.traefik.yml
+SITE_DOMAIN=loonatya.example.com
+TRAEFIK_NETWORK=proxy
+TRAEFIK_ENTRYPOINT=websecure
+TRAEFIK_CERTRESOLVER=letsencrypt
+```
+
+Замените домен, имя Docker-сети, HTTPS entrypoint и certificate resolver на свои.
+Домен указывается без `https://` и пути; его DNS должен вести на VDS.
+Traefik должен использовать Docker provider, быть подключён к той же сети,
+иметь указанные entrypoint и resolver. Labels сайта не создают их в Traefik.
+HTTP → HTTPS redirect настройте на HTTP entrypoint существующего Traefik.
+Если TLS уже настроен на HTTPS entrypoint (например, общий wildcard-сертификат),
+удалите label `traefik.http.routers.loonatya.tls.certresolver` из этого Compose;
+переменная `TRAEFIK_CERTRESOLVER` тогда не нужна.
+
+Workflow доставляет оба Compose-файла. `COMPOSE_FILE` из серверного `.env`
+выбирает вариант с Traefik для pull, up, logs и отката — флаг `-f` не требуется.
+После следующего деплоя можно повторить запуск вручную:
+
+```bash
+cd /opt/loonatya
+docker compose --env-file .env --env-file image.env up -d --wait
+```
+
+Настройки labels: [документация Traefik](https://doc.traefik.io/traefik/reference/routing-configuration/other-providers/docker/).
+
 ## Compose на сервере
 
 `compose.yml` — готовый пример. По умолчанию порт `8080` доступен только на

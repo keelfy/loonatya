@@ -31,6 +31,7 @@ target="$SSH_USER@$SSH_HOST"
 
 ssh "${ssh_options[@]}" -p "$SSH_PORT" "$target" "mkdir -p '$DEPLOY_PATH'"
 scp "${ssh_options[@]}" -P "$SSH_PORT" compose.yml "$target:$DEPLOY_PATH/compose.next.yml"
+scp "${ssh_options[@]}" -P "$SSH_PORT" compose.traefik.yml "$target:$DEPLOY_PATH/compose.traefik.next.yml"
 
 # Send the short-lived registry token through encrypted stdin, not command arguments.
 {
@@ -46,6 +47,7 @@ trap 'rm -rf "$DOCKER_CONFIG"' EXIT
 printf '%s' "$registry_token" | docker login ghcr.io --username "$registry_user" --password-stdin
 unset registry_token
 mv compose.next.yml compose.yml
+mv compose.traefik.next.yml compose.traefik.yml
 touch .env image.env
 docker compose --env-file .env --env-file image.env pull
 docker compose --env-file .env --env-file image.env up -d --wait --wait-timeout 60

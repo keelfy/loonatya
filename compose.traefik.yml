@@ -1,0 +1,27 @@
+name: loonatya
+
+services:
+  web:
+    image: ${IMAGE:-ghcr.io/keelfy/loonatya:latest}
+    restart: unless-stopped
+    networks:
+      - proxy
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: "${TRAEFIK_NETWORK:?Set TRAEFIK_NETWORK}"
+      traefik.http.routers.loonatya.rule: "Host(`${SITE_DOMAIN:?Set SITE_DOMAIN}`)"
+      traefik.http.routers.loonatya.entrypoints: "${TRAEFIK_ENTRYPOINT:-websecure}"
+      traefik.http.routers.loonatya.tls: "true"
+      traefik.http.routers.loonatya.tls.certresolver: "${TRAEFIK_CERTRESOLVER:?Set TRAEFIK_CERTRESOLVER}"
+      traefik.http.routers.loonatya.service: loonatya
+      traefik.http.services.loonatya.loadbalancer.server.port: "80"
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
+networks:
+  proxy:
+    external: true
+    name: "${TRAEFIK_NETWORK:?Set TRAEFIK_NETWORK}"
