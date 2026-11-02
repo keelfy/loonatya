@@ -39,9 +39,29 @@
         float hair = region(p, vec2(0.397, 0.139), vec2(0.065, 0.055))
                    + region(p, vec2(0.535, 0.140), vec2(0.055, 0.050));
         float skirt = region(p, vec2(0.475, 0.565), vec2(0.185, 0.110));
+        // Local masks let loose fabric move while its attachment stays still.
+        float ribbons = region(p, vec2(0.347, 0.690), vec2(0.031, 0.090))
+                      + region(p, vec2(0.629, 0.654), vec2(0.025, 0.075));
+        float bows = region(p, vec2(0.348, 0.844), vec2(0.030, 0.046))
+                   + region(p, vec2(0.423, 0.862), vec2(0.024, 0.040))
+                   + region(p, vec2(0.551, 0.858), vec2(0.028, 0.039))
+                   + region(p, vec2(0.638, 0.860), vec2(0.026, 0.041));
+        float ruffles = region(p, vec2(0.367, 0.316), vec2(0.061, 0.025))
+                      + region(p, vec2(0.607, 0.266), vec2(0.052, 0.021))
+                      + region(p, vec2(0.331, 0.520), vec2(0.044, 0.023))
+                      + region(p, vec2(0.647, 0.424), vec2(0.033, 0.023));
+        vec2 fabric = vec2(
+          ribbons * 0.0032 * sin(time * 0.85 + position.y * 18.0)
+            + bows * 0.0020 * sin(time * 1.05 + position.x * 16.0)
+            + ruffles * 0.0018 * sin(time * 1.15 + position.x * 14.0),
+          ribbons * 0.0007 * sin(time * 0.85 + position.y * 21.0)
+            + bows * 0.0010 * sin(time * 1.05 + position.x * 19.0)
+            + ruffles * 0.0011 * sin(time * 1.15 + position.x * 17.0)
+        );
         p.x += hair * 0.0035 * sin(time * 1.15 + p.y * 24.0)
              + skirt * 0.0028 * sin(time * 0.85 + p.x * 12.0);
         p.y += skirt * 0.0008 * sin(time * 0.85 + p.x * 15.0);
+        p += fabric;
         gl_Position = vec4(p.x * 2.0 - 1.0, 1.0 - p.y * 2.0, 0.0, 1.0);
       }
     `));
