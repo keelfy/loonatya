@@ -76,6 +76,7 @@
     .s4 { animation-delay: -6s; animation-duration: 10s; }
     @keyframes glow-drift { from { transform: translate(-25px, -20px); opacity: .45; } to { transform: translate(35px, 30px); opacity: 1; } }
     @keyframes orbit-turn { to { transform: rotate(360deg); } }
+    @keyframes character-sway { 0%, 100% { transform: translateY(0) rotate(-.2deg); } 50% { transform: translateY(-3px) rotate(.2deg); } }
     @keyframes star-float { from { transform: translateY(0) scale(.85); opacity: .25; } to { transform: translateY(-14px) scale(1.1); opacity: .75; } }
     .s1 { top: 29%; left: 19%; } .s2 { top: 18%; right: 22%; font-size: 9px; } .s3 { top: 65%; right: 17%; font-size: 19px; } .s4 { bottom: 22%; left: 24%; font-size: 8px; }
     @media (min-width: 601px) {
@@ -85,7 +86,7 @@
       .character picture { display: contents; }
       .art-credit { margin-top: 4px; padding: 4px; color: #756b83; font-size: 10px; text-decoration: none; text-underline-offset: 3px; pointer-events: auto; }
       .art-credit:hover, .art-credit:focus-visible { color: #b9afc8; text-decoration: underline; }
-      .character img { display: block; flex-shrink: 0; width: 230%; height: auto; max-height: min(800px, calc(100svh - 130px)); object-fit: contain; }
+      .character img { display: block; flex-shrink: 0; width: 230%; height: auto; max-height: min(800px, calc(100svh - 130px)); object-fit: contain; transform-origin: 50% 95%; animation: character-sway 8s ease-in-out infinite; }
       main { grid-column: 2; width: 100%; min-width: 0; margin: clamp(16px, 3vh, 36px) auto 24px; }
       .emblem { margin-bottom: 18px; }
       h1 { font-size: 56px; letter-spacing: -2.8px; margin-bottom: 12px; }
@@ -109,7 +110,7 @@
       .setup-link { margin-top: 8px; }
     }
     @media (max-width: 600px) { .page { padding: 25px 22px 22px; } main { margin-top: 42px; margin-bottom: 44px; } .link { padding: 16px 19px; } .s1 { left: 7%; top: 24%; } .s2 { right: 12%; top: 14%; } .s3, .s4 { display: none; } footer { font-size: 9px; letter-spacing: .4px; } }
-    @media (prefers-reduced-motion: reduce) { .link, .link::after, .cursor-dots, .emblem img { transition: none; } .link:hover { transform: none; } .page::after, .orbit, .orbit-outer, .star { animation: none; } }
+    @media (prefers-reduced-motion: reduce) { .link, .link::after, .cursor-dots, .emblem img { transition: none; } .link:hover { transform: none; } .page::after, .orbit, .orbit-outer, .star, .character img { animation: none; } }
   </style>
 </head>
 <body>
@@ -129,7 +130,7 @@
       </div>
     </div><span class="star s1" aria-hidden="true">✦</span><span class="star s2" aria-hidden="true">✧</span><span class="star s3" aria-hidden="true">✧</span><span class="star s4" aria-hidden="true">✦</span>
     <div class="content">
-      <div class="character"><picture><source media="(min-width: 601px)" srcset="character.png"><img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="" width="1403" height="2000"></picture><a class="art-credit" href="https://t.me/Augustaaa3" target="_blank" rel="noopener noreferrer" aria-label="Автор арта — Augustaaa, Telegram">Augustaaa</a></div>
+      <div class="character"><picture><source media="(min-width: 601px)" srcset="character.png"><img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="" width="1403" height="2000"></picture><a class="art-credit" href="https://t.me/Augustaaa3" target="_blank" rel="noopener noreferrer" aria-label="Автор арта — Augustaaa3, Telegram">Augustaaa3</a></div>
     <main>
       <a class="emblem" href="https://twitch.tv/loonatya" target="_blank" rel="noopener noreferrer" aria-label="Лунатя на Twitch"><img src="avatar.png" alt="Аватар Лунати" width="606" height="703"></a>
       <p class="eyebrow">VTUBER · STREAMER · COSPLAYER</p>
