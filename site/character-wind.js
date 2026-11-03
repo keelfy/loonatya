@@ -50,13 +50,17 @@
                       + region(p, vec2(0.607, 0.266), vec2(0.052, 0.021))
                       + region(p, vec2(0.331, 0.520), vec2(0.044, 0.023))
                       + region(p, vec2(0.647, 0.424), vec2(0.033, 0.023));
+        // Broader falloff keeps the small fabric edges visibly moving at page scale.
+        ribbons = sqrt(ribbons);
+        bows = sqrt(bows);
+        ruffles = sqrt(ruffles);
         vec2 fabric = vec2(
-          ribbons * 0.0032 * sin(time * 0.85 + position.y * 18.0)
-            + bows * 0.0020 * sin(time * 1.05 + position.x * 16.0)
-            + ruffles * 0.0018 * sin(time * 1.15 + position.x * 14.0),
-          ribbons * 0.0007 * sin(time * 0.85 + position.y * 21.0)
-            + bows * 0.0010 * sin(time * 1.05 + position.x * 19.0)
-            + ruffles * 0.0011 * sin(time * 1.15 + position.x * 17.0)
+          ribbons * 0.0100 * sin(time * 0.85 + position.y * 18.0)
+            + bows * 0.0070 * sin(time * 1.05 + position.x * 16.0)
+            + ruffles * 0.0060 * sin(time * 1.15 + position.x * 14.0),
+          ribbons * 0.0018 * sin(time * 0.85 + position.y * 21.0)
+            + bows * 0.0025 * sin(time * 1.05 + position.x * 19.0)
+            + ruffles * 0.0028 * sin(time * 1.15 + position.x * 17.0)
         );
         p.x += hair * 0.0035 * sin(time * 1.15 + p.y * 24.0)
              + skirt * 0.0028 * sin(time * 0.85 + p.x * 12.0);
